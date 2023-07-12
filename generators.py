@@ -12,10 +12,16 @@ class GeneratorBase:
 
 
 class StarCoder(GeneratorBase):
-    def __init__(self, pretrained: str, device: str = None, device_map: str = None):
+    def __init__(self, pretrained: str, device: str = None, device_map: str = None, auth_token: str = False):
         self.pretrained: str = pretrained
         self.pipe: Pipeline = pipeline(
-            "text-generation", model=pretrained, torch_dtype=torch.bfloat16, device=device, device_map=device_map)
+            "text-generation", 
+            model=pretrained, 
+            torch_dtype=torch.bfloat16,
+            device=device, 
+            device_map=device_map,
+            use_auth_token=auth_token
+        )
         self.generation_config = GenerationConfig.from_pretrained(pretrained)
         self.generation_config.pad_token_id = self.pipe.tokenizer.eos_token_id
 
